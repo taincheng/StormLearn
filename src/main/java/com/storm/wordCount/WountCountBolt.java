@@ -5,40 +5,34 @@ import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichBolt;
-import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
-import org.apache.storm.tuple.Values;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Author TianCheng
- * @Date 2020/3/5 20:58
+ * @Date 2020/3/6 11:02
  */
-public class SplitBolt extends BaseRichBolt{
-    private OutputCollector collector;
+public class WountCountBolt extends BaseRichBolt {
+
+    private ConcurrentHashMap<String, Integer> wordCount;
 
     @Override
     public void prepare(Map<String, Object> topoConf, TopologyContext context, OutputCollector collector) {
-        this.collector = collector;
+
     }
 
     @Override
     public void execute(Tuple input) {
-        String tmp = input.getStringByField("line").trim();
-        if (StringUtils.isNotBlank(tmp)) {
-            String[] split = StringUtils.split(tmp, null, 0);
-            if (split.length != 0){
-                for (String s : split){
-                    collector.emit(new Values(s));
-                }
-            }
-        }
+        String split = input.getStringByField("split");
+        split = StringUtils.strip(split, " .:,\"").toLowerCase();
 
+        wordCount.merge(split, 1, (oldValue, newValue) -> oldValue + newValue);
     }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("split"));
+
     }
 }
