@@ -28,15 +28,19 @@ public class DataSourceSpout extends BaseRichSpout {
     }
     @Override
     public void nextTuple() {
-        Collection<File> files = FileUtils.listFiles(new File("/file/word.txt"), new String[]{"txt"}, false);
-        for (File file : files){
-            try {
-                List<String> lines = FileUtils.readLines(file, "utf-8");
-                for (String line : lines){
-                    collector.emit(new Values(line));
+        Collection<File> files = FileUtils.listFiles(new File("src/main/resources/file"), new String[]{"txt"}, true);
+        if(!files.isEmpty()){
+            for (File file : files){
+                try {
+                    List<String> lines = FileUtils.readLines(file, "utf-8");
+                    for (String line : lines){
+                        collector.emit(new Values(line));
+                        System.out.println(line);
+                    }
+                    FileUtils.moveFile(file, new File(file.getPath() + "1"));
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }

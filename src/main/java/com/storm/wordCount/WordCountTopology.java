@@ -11,7 +11,9 @@ import org.apache.storm.topology.TopologyBuilder;
 public class WordCountTopology {
     public static void main(String[] args) {
         TopologyBuilder builder = new TopologyBuilder();
-
+        builder.setSpout("DataSourceSpout", new DataSourceSpout(), 1);
+        builder.setBolt("SplitBolt", new SplitBolt(), 1).shuffleGrouping("DataSourceSpout");
+        builder.setBolt("WountCountBolt", new WountCountBolt(), 1).shuffleGrouping("SplitBolt");
         try {
             LocalCluster cluster = new LocalCluster();
             cluster.submitTopology("WordCountTopology", new Config(), builder.createTopology());

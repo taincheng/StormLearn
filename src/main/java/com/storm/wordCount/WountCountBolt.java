@@ -8,6 +8,7 @@ import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Tuple;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -29,6 +30,11 @@ public class WountCountBolt extends BaseRichBolt {
         split = StringUtils.strip(split, " .:,\"").toLowerCase();
 
         wordCount.merge(split, 1, (oldValue, newValue) -> oldValue + newValue);
+
+        Set<Map.Entry<String, Integer>> entries = wordCount.entrySet();
+        for (Map.Entry entry : entries){
+            System.out.println(entry.getKey() + " : " + entry.getValue());
+        }
     }
 
     @Override
