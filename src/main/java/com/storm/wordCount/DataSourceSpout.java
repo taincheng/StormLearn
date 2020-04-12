@@ -2,7 +2,6 @@ package com.storm.wordCount;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.storm.spout.SpoutOutputCollector;
-import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichSpout;
@@ -35,7 +34,6 @@ public class DataSourceSpout extends BaseRichSpout {
                     List<String> lines = FileUtils.readLines(file, "utf-8");
                     for (String line : lines){
                         collector.emit(new Values(line));
-                        System.out.println(line);
                     }
                     FileUtils.moveFile(file, new File(file.getPath() + "1"));
                 } catch (IOException e) {

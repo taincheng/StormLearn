@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class WountCountBolt extends BaseRichBolt {
 
-    private ConcurrentHashMap<String, Integer> wordCount;
+    private ConcurrentHashMap<String, Integer> wordCount = new ConcurrentHashMap<>();
 
     @Override
     public void prepare(Map<String, Object> topoConf, TopologyContext context, OutputCollector collector) {
